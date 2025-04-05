@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculate compound interest and investment growth with our neon-themed tool. See your wealth grow with dynamic charts in your currency.">
+    <meta name="keywords" content="Compound Interest, Investment Growth, Calculator, Neon Theme, Currency Selection">
+    <title>Compound Interest & Growth Calculator by GameNeXT</title>
+    <style>
+        /* General Styles */
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .main-content {
+            grid-column: 2 / 3;
+        }
+
+        /* Header */
+        header h1 {
+            text-align: center;
+            font-size: 2.5em;
+            text-shadow: 0 0 15px #eab308, 0 0 25px #22c55e;
+            animation: glowPulse 3s infinite alternate, colorTransition 15s infinite;
+        }
+
+        /* Introduction Section */
+        .introduction {
+            margin-bottom: 40px;
+            text-align: center;
+            border: 2px solid #eab308;
+            padding: 20px;
+            box-shadow: 0 0 20px #22c55e;
+            animation: borderColorTransition 15s infinite;
+        }
+        .introduction h2 {
+            font-size: 2em;
+            animation: colorTransition 15s infinite;
+        }
+        .introduction p {
+            font-size: 1.1em;
+            text-shadow: 0 0 5px #eab308;
+        }
+        .highlight {
+            color: #eab308;
+            font-weight: bold;
+            animation: colorTransition 15s infinite;
+        }
+
+        /* Calculator Section */
+        form {
+            display: grid;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #22c55e;
+            animation: borderColorTransition 15s infinite;
+        }
+        label {
+            font-size: 1.2em;
+            text-shadow: 0 0 5px #eab308;
+            animation: colorTransition 15s infinite;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 2px solid #eab308;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #22c55e;
+            transition: all 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            box-shadow: 0 0 20px #16a34a;
+            transform: scale(1.02);
+        }
+
+        /* Currency Dropdown */
+        .currency-select {
+            position: relative;
+        }
+        #currency-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 2px solid #eab308;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #22c55e;
+            transition: all 0.3s ease;
+            animation: buttonColorTransition 15s infinite;
+        }
+        #currency-button:hover {
+            box-shadow: 0 0 20px #16a34a;
+            transform: scale(1.05);
+        }
+        #currency-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 2px solid #eab308;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #22c55e;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        #currency-dropdown.open {
+            max-height: 300px;
+        }
+        #currency-search {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: none;
+            border-bottom: 1px solid #eab308;
+            box-shadow: 0 0 5px #22c55e;
+        }
+        #currency-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        #currency-list li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, text-shadow 0.3s ease;
+        }
+        #currency-list li:hover {
+            background-color: #2a2a2a;
+            text-shadow: 0 0 10px #16a34a;
+        }
+
+        /* Calculate Button */
+        #calculate-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #eab308;
+            color: #0f0f0f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #22c55e;
+            transition: all 0.3s ease;
+            animation: buttonColorTransition 15s infinite;
+        }
+        #calculate-button:hover {
+            box-shadow: 0 0 25px #16a34a;
+            transform: scale(1.05);
+            background-color: #ca8a04;
+        }
+
+        /* Results Section */
+        #result {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #eab308;
+            animation: colorTransition 15s infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #result.show {
+            opacity: 1;
+        }
+        #chart-container {
+            margin-top: 20px;
+            height: 300px;
+            display: none;
+            border: 2px solid #eab308;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #22c55e;
+            animation: borderColorTransition 15s infinite;
+        }
+
+        /* Ad Space */
+        .ad-space {
+            padding: 20px;
+            border: 2px solid #eab308;
+            text-align: center;
+            font-size: 1.2em;
+            box-shadow: 0 0 15px #22c55e;
+            background-color: #1a1a1a;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.3s ease;
+            animation: borderColorTransition 15s infinite;
+        }
+        .ad-space:hover {
+            box-shadow: 0 0 25px #16a34a;
+        }
+        .ad-left {
+            grid-column: 1 / 2;
+        }
+        .ad-right {
+            grid-column: 3 / 4;
+        }
+
+        /* Call-to-Action */
+        .cta {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px dashed #eab308;
+            box-shadow: 0 0 10px #22c55e;
+            animation: borderColorTransition 15s infinite;
+        }
+        .cta a {
+            color: #eab308;
+            text-decoration: none;
+            font-weight: bold;
+            animation: colorTransition 15s infinite;
+        }
+        .cta a:hover {
+            text-shadow: 0 0 15px #16a34a;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.8em;
+            text-shadow: 0 0 5px #eab308;
+            grid-column: 1 / 4;
+            animation: colorTransition 15s infinite;
+        }
+
+        /* New Background Animations */
+        .bg-animations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .bg-animation {
+            position: absolute;
+            border-radius: 0; /* Rectangular shapes */
+            box-shadow: 0 0 15px #eab308, 0 0 25px #22c55e;
+            animation: orbitAndFade 12s infinite ease-in-out, bgColorTransition 15s infinite;
+        }
+        .bg-animation:nth-child(1) {
+            width: 50px;
+            height: 10px;
+            top: 15%;
+            left: 10%;
+            background: linear-gradient(90deg, #eab308, #22c55e);
+            animation-duration: 10s;
+        }
+        .bg-animation:nth-child(2) {
+            width: 30px;
+            height: 15px;
+            top: 40%;
+            left: 60%;
+            background: linear-gradient(45deg, #22c55e, #eab308);
+            animation-duration: 14s;
+            animation-delay: 2s;
+        }
+        .bg-animation:nth-child(3) {
+            width: 40px;
+            height: 8px;
+            top: 65%;
+            left: 25%;
+            background: linear-gradient(135deg, #eab308, #22c55e);
+            animation-duration: 16s;
+            animation-delay: 4s;
+        }
+        .bg-animation:nth-child(4) {
+            width: 60px;
+            height: 12px;
+            top: 85%;
+            left: 75%;
+            background: linear-gradient(270deg, #22c55e, #eab308);
+            animation-duration: 18s;
+            animation-delay: 6s;
+        }
+
+        /* Animations */
+        @keyframes orbitAndFade {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
+            25% { transform: translate(30vw, 20vh) rotate(90deg); opacity: 0.5; }
+            50% { transform: translate(60vw, -10vh) rotate(180deg); opacity: 0.8; }
+            75% { transform: translate(20vw, 40vh) rotate(270deg); opacity: 0.5; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.8; }
+        }
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 15px #eab308, 0 0 25px #22c55e; }
+            100% { text-shadow: 0 0 20px #ca8a04, 0 0 35px #16a34a; }
+        }
+        @keyframes colorTransition {
+            0% { color: #eab308; text-shadow: 0 0 10px #eab308; }
+            20% { color: #ca8a04; text-shadow: 0 0 10px #ca8a04; }
+            40% { color: #22c55e; text-shadow: 0 0 10px #22c55e; }
+            60% { color: #16a34a; text-shadow: 0 0 10px #16a34a; }
+            80% { color: #d97706; text-shadow: 0 0 10px #d97706; }
+            100% { color: #eab308; text-shadow: 0 0 10px #eab308; }
+        }
+        @keyframes borderColorTransition {
+            0% { border-color: #eab308; box-shadow: 0 0 15px #eab308; }
+            20% { border-color: #ca8a04; box-shadow: 0 0 15px #ca8a04; }
+            40% { border-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+            60% { border-color: #16a34a; box-shadow: 0 0 15px #16a34a; }
+            80% { border-color: #d97706; box-shadow: 0 0 15px #d97706; }
+            100% { border-color: #eab308; box-shadow: 0 0 15px #eab308; }
+        }
+        @keyframes buttonColorTransition {
+            0% { background-color: #eab308; box-shadow: 0 0 15px #eab308; }
+            20% { background-color: #ca8a04; box-shadow: 0 0 15px #ca8a04; }
+            40% { background-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
+            60% { background-color: #16a34a; box-shadow: 0 0 15px #16a34a; }
+            80% { background-color: #d97706; box-shadow: 0 0 15px #d97706; }
+            100% { background-color: #eab308; box-shadow: 0 0 15px #eab308; }
+        }
+        @keyframes bgColorTransition {
+            0% { background: linear-gradient(90deg, #eab308, #22c55e); }
+            20% { background: linear-gradient(90deg, #ca8a04, #16a34a); }
+            40% { background: linear-gradient(90deg, #22c55e, #eab308); }
+            60% { background: linear-gradient(90deg, #16a34a, #ca8a04); }
+            80% { background: linear-gradient(90deg, #d97706, #22c55e); }
+            100% { background: linear-gradient(90deg, #eab308, #22c55e); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .main-content, .ad-left, .ad-right, footer {
+                grid-column: 1 / 2;
+            }
+            .ad-space {
+                height: 200px;
+                margin: 20px 0;
+            }
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2em; }
+            form { max-width: 100%; }
+            #result { font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animations -->
+    <div class="bg-animations">
+        <div class="bg-animation"></div>
+        <div class="bg-animation"></div>
+        <div class="bg-animation"></div>
+        <div class="bg-animation"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Left Ad Space -->
+        <div class="ad-space ad-left">Advertisement Left</div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header>
+                <h1>Compound Interest & Growth Calculator</h1>
+            </header>
+            <main>
+                <!-- Introduction Section -->
+                <section class="introduction">
+                    <h2>Grow Your Wealth</h2>
+                    <p>Explore the power of <span class="highlight">compound interest</span> with our vibrant calculator. Input your investment details to see your future gains!</p>
+                </section>
+                <!-- Calculator Section -->
+                <form id="calculator-form">
+                    <label for="initial-investment">Initial Investment</label>
+                    <input type="number" id="initial-investment" placeholder="e.g., 1000" step="0.01">
+                    <label for="monthly-contribution">Monthly Contribution</label>
+                    <input type="number" id="monthly-contribution" placeholder="e.g., 200" step="0.01">
+                    <label for="annual-interest">Annual Interest Rate (%)</label>
+                    <input type="number" id="annual-interest" placeholder="e.g., 5" step="0.01">
+                    <label for="time-horizon">Time Horizon (Years)</label>
+                    <input type="number" id="time-horizon" placeholder="e.g., 10" step="1">
+                    <div class="currency-select">
+                        <button type="button" id="currency-button">USD - $</button>
+                        <div id="currency-dropdown">
+                            <input type="text" id="currency-search" placeholder="Search currency">
+                            <ul id="currency-list"></ul>
+                        </div>
+                    </div>
+                    <button type="button" id="calculate-button">Calculate Growth</button>
+                </form>
+                <!-- Results Section -->
+                <div id="result"></div>
+                <div id="chart-container">
+                    <canvas id="growth-chart"></canvas>
+                </div>
+                <!-- Call-to-Action -->
+                <section class="cta">
+                    <p>Start investing with <a href="https://example.com/investment-platforms" target="_blank" rel="noopener">leading investment platforms</a>!</p>
+                </section>
+            </main>
+            <footer>
+                <p>© 2025 Compund Intrest Calculator by GameNeXT</p>
+            </footer>
+        </div>
+
+        <!-- Right Ad Space -->
+        <div class="ad-space ad-right">Advertisement Right</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Currency List
+        const currencies = [
+            { code: "USD", symbol: "$" },
+            { code: "EUR", symbol: "€" },
+            { code: "GBP", symbol: "£" },
+            { code: "JPY", symbol: "¥" },
+            { code: "AUD", symbol: "A$" },
+            { code: "CAD", symbol: "C$" },
+            { code: "CHF", symbol: "Fr" },
+            { code: "CNY", symbol: "¥" },
+            { code: "INR", symbol: "₹" },
+            { code: "BRL", symbol: "R$" },
+            ...Array.from({ length: 50 }, (_, i) => ({
+                code: `CUR${i + 1}`,
+                symbol: `C${i + 1}`
+            }))
+        ];
+
+        // Populate Currency Dropdown
+        const currencyList = document.getElementById('currency-list');
+        currencies.forEach(currency => {
+            const li = document.createElement('li');
+            li.textContent = `${currency.code} - ${currency.symbol}`;
+            li.dataset.code = currency.code;
+            li.dataset.symbol = currency.symbol;
+            currencyList.appendChild(li);
+        });
+
+        // Dropdown Functionality
+        const currencyButton = document.getElementById('currency-button');
+        const currencyDropdown = document.getElementById('currency-dropdown');
+        const currencySearch = document.getElementById('currency-search');
+        const currencySelect = document.querySelector('.currency-select');
+        let selectedSymbol = '$';
+
+        currencyButton.addEventListener('click', () => {
+            currencyDropdown.classList.toggle('open');
+        });
+
+        currencySearch.addEventListener('input', () => {
+            const searchTerm = currencySearch.value.toLowerCase();
+            const items = currencyList.querySelectorAll('li');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        currencyList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                selectedSymbol = e.target.dataset.symbol;
+                currencyButton.textContent = `${e.target.dataset.code} - ${e.target.dataset.symbol}`;
+                currencyDropdown.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!currencySelect.contains(e.target)) {
+                currencyDropdown.classList.remove('open');
+            }
+        });
+
+        // Calculation Logic
+        const calculateButton = document.getElementById('calculate-button');
+        const resultDiv = document.getElementById('result');
+        const chartContainer = document.getElementById('chart-container');
+        let growthChart;
+
+        calculateButton.addEventListener('click', () => {
+            const initialInvestment = parseFloat(document.getElementById('initial-investment').value) || 0;
+            const monthlyContribution = parseFloat(document.getElementById('monthly-contribution').value) || 0;
+            const annualInterest = parseFloat(document.getElementById('annual-interest').value);
+            const timeHorizon = parseInt(document.getElementById('time-horizon').value);
+
+            if (isNaN(annualInterest) || isNaN(timeHorizon) || initialInvestment < 0 || monthlyContribution < 0 || annualInterest < 0 || timeHorizon <= 0) {
+                resultDiv.textContent = 'Please enter valid positive values.';
+                resultDiv.style.opacity = '0';
+                setTimeout(() => { resultDiv.style.opacity = '1'; }, 100);
+                chartContainer.style.display = 'none';
+                return;
+            }
+
+            const monthlyRate = annualInterest / 100 / 12;
+            const totalMonths = timeHorizon * 12;
+            const futureValueInitial = initialInvestment * Math.pow(1 + annualInterest / 100, timeHorizon);
+            const futureValueContributions = monthlyContribution * ((Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate) * (1 + monthlyRate);
+            const totalFutureValue = futureValueInitial + futureValueContributions;
+
+            resultDiv.style.opacity = '0';
+            setTimeout(() => {
+                resultDiv.textContent = `Future Value: ${selectedSymbol}${totalFutureValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                resultDiv.style.opacity = '1';
+            }, 100);
+
+            // Chart
+            chartContainer.style.display = 'block';
+            if (growthChart) growthChart.destroy();
+            const ctx = document.getElementById('growth-chart').getContext('2d');
+            const yearlyData = [];
+            let currentValue = initialInvestment;
+            for (let year = 0; year <= timeHorizon; year++) {
+                if (year > 0) {
+                    const yearlyInitial = currentValue * (1 + annualInterest / 100);
+                    const yearlyContributions = monthlyContribution * ((Math.pow(1 + monthlyRate, 12) - 1) / monthlyRate) * (1 + monthlyRate);
+                    currentValue = yearlyInitial + yearlyContributions;
+                }
+                yearlyData.push(currentValue);
+            }
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: timeHorizon + 1 }, (_, i) => `Year ${i}`),
+                    datasets: [{
+                        label: `Investment Growth (${selectedSymbol})`,
+                        data: yearlyData,
+                        borderColor: '#eab308',
+                        backgroundColor: 'rgba(234, 179, 8, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    animation: { duration: 1000, easing: 'easeInOutQuad' },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
